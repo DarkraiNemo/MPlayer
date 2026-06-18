@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geo:ital@0;1&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/x-icon" href="./zonialogo.svg">
+    <title>MPlayer</title>
+</head>
+<body>
+    <div id="loading-screen">
+        <p>Loading...</p>
+    </div>
+    <header class="navbar">
+        <h1 class="nav-title looker 3d-effect">MPlayer</h1>
+        <div class="nowPlaying">
+            <span id="now-playing-name"></span>
+        </div>
+        <nav class="nav-links">
+            <a onclick="showTab('dropPlay')">drop play</a>
+            <a onclick="showTab('playlist')">playlist</a>
+            <a onclick="showTab('visualizer')">visualizer</a>
+            <a onclick="showTab('project')">project</a>
+        </nav>
+    </header>
+    <main>
+        <aside class="sidebar-left">
+            <div class="player">
+                <audio id="audio-player"></audio>
+                <div class="cover">
+                    <div class="sourceImg">
+                        <img id="cover-art" class="canvaImg" src="https://i.imgur.com/JRry7xN.png" alt="Album cover">
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <span id="current-time">0:00</span>
+                    <input type="range" id="progress-slider" min="0" max="100" value="0">
+                    <span id="duration-time">0:00</span>
+                </div>
+                <div class="volume-container">
+                    <input type="range" id="volume-slider" min="0" max="0.5" step="0.01" value="0.5">
+                </div>
+                <div class="playerButtons">
+                    <button id="btn-rewind" type="button" aria-label="Retroceder">⏮</button>
+                    <button id="btn-stop" type="button" aria-label="Parar">⏹</button>
+                    <button id="btn-loop" type="button" aria-label="Loop">🔁</button>
+                    <button id="btn-play" type="button" aria-label="Tocar">▶</button>
+                    <button id="btn-pause" type="button" aria-label="Pausar">⏸</button>
+                    <button id="btn-forward" type="button" aria-label="Avançar">⏭</button>
+                </div>
+            </div>
+        </aside>
+        <section id="tab-dropPlay">
+            <article>
+                <div id="drop-zone" class="drop-zone">
+                    <p>Drop any song here to start listening.</p>
+                </div>
+            </article>
+        </section>
+        <section id="tab-visualizer">
+            <article class="visualizer-wrap">
+                <canvas id="visualizer-canvas"></canvas>
+            </article>
+        </section>
+        <section id="tab-playlist">
+            <article>
+                <p>No songs yet! Drop some over the <strong>drop zone</strong> to start listening!</p>
+            </article>
+        </section>
+        <section id="tab-project">
+            <article>
+                <div class="container">
+                    <div class="box">
+                        <p>Hi, name's Darkgrey, pleasure to meet you!</p>
+                        <br>
+                        <img src="https://i.imgur.com/6KuBFtk.gif" alt="Darkon smiling GIF" class="imgSize">
+                        <p><br>I made this project with some help aside.<br>I'm a dev_ trying to make some programs that can be useful! Let me know if you have any suggestions hehe.<br>Aaaanyway, if you want to check out my other projects, you can find them on my GitHub site!</p>
+                        <br>
+                        <p><a href="https://darkrainemo.github.io" target="_blank">Right here!</a></p>
+                    </div>
+                    <div class="box">
+                        <p><strong>-= Credits =-</strong></p>
+                        <p>I do <strong><u>not</u></strong>, own any of the songs that can be played on here.</p>
+                        <br>
+                        <p>&copy; <span id="year"></span> MPlayer. All rights reserved.</p>
+                    </div>
+                </div>
+            </article>
+        </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/jsmediatags@3.9.7/dist/jsmediatags.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="./player.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>

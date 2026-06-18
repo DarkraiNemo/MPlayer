@@ -1,0 +1,36 @@
+{
+  "name": "mplayer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "homepage": "https://github.com/DarkraiNemo/MPlayer.git",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --linux --win"
+  },
+  "build": {
+    "appId": "com.mplayer.mplayer",
+    "productName": "MPlayer",
+    "icon": "build/icon.ico",
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "icon": "build/icon.png",
+      "maintainer": "Darkgrey_ <backupusa190@gmail.com>"
+    },
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "build/icon.ico"
+    }
+  },
+  "keywords": [],
+  "author": {
+    "name": "Darkgrey_",
+    "email": "backupusa190@gmail.com"
+  },
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "^42.4.1",
+    "electron-builder": "^26.15.3"
+  }
+}
