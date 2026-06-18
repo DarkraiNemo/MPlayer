@@ -228,6 +228,16 @@ async function handleDroppedFiles(itemsOrFiles) {
 
     if (uniqueAudio.length === 0) return;
 
+    const startingIndex = playlist.length;
+    playlist = [...playlist, ...uniqueAudio]; 
+    
+    renderPlaylist();
+    showPlaylistTab();
+    
+    if (startingIndex === 0) {
+        loadTrack(0);
+    }
+
     playlist = uniqueAudio;
     renderPlaylist();
     showPlaylistTab();
@@ -298,17 +308,11 @@ progressSlider?.addEventListener('input', () => {
     audioPlayer.currentTime = (Number(progressSlider.value) / 100) * audioPlayer.duration;
 });
 
-['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
+['dragenter', 'dragover', 'dragleave'].forEach((eventName) => {
     document.addEventListener(eventName, (e) => {
         e.preventDefault();
         e.stopPropagation();
     });
-});
-
-document.addEventListener('drop', (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    handleDroppedFiles(e.dataTransfer.items || e.dataTransfer.files);
 });
 
 if (dropZone) {

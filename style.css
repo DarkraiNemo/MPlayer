@@ -3,8 +3,8 @@
 * {
     color-scheme: light dark;
     margin: 0;
-    padding-top: 15;
-    padding-bottom: 15;
+    padding-top: 15px; 
+    padding-bottom: 15px; 
     border-radius: 10px;
     user-select: none;
     box-sizing: border-box;

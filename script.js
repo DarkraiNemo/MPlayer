@@ -29,15 +29,10 @@ function showTab(name) {
 
 document.addEventListener("DOMContentLoaded", () => {
     showTab('dropPlay');
-    /*
-    renderUI();
-    bindEvents();
-    */
 });
 
 window.addEventListener("load", () => {
     hideLoadingScreen();
-    // loadPlaylist();
 });
 
 function hideLoadingScreen() {
