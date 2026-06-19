@@ -1,18 +1,5 @@
 document.getElementById('year').textContent = new Date().getFullYear();
 
-document.addEventListener("mousemove", (e) => {
-    const title = document.querySelector(".nav-title");
-    const rect = title.getBoundingClientRect();
-
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-
-    const angleX = (e.clientY - centerY) / 20;
-    const angleY = (e.clientX - centerX) / 20;
-
-    title.style.transform = `perspective(300px) rotateX(${-angleX}deg) rotateY(${angleY}deg)`;
-});
-
 function showTab(name) {
     const tabs = document.querySelectorAll('main section');
     tabs.forEach(tab => tab.style.display = 'none');
@@ -21,14 +8,13 @@ function showTab(name) {
     if (!target) return;
 
     target.style.display = 'flex';
-
     target.style.animation = 'none';
     target.offsetHeight;
     target.style.animation = '';
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    showTab('dropPlay');
+    showTab('welcome');
 });
 
 window.addEventListener("load", () => {
@@ -101,3 +87,24 @@ async function readDirectory(dirEntry) {
     await readAll();
     return files;
 }
+
+document.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+});
+
+document.addEventListener("drop", async (event) => {
+    event.preventDefault();
+
+    const items = event.dataTransfer?.items;
+    const files = event.dataTransfer?.files;
+
+    if (items && items.length) {
+        await handleDroppedFiles(items);
+        return;
+    }
+
+    if (files && files.length) {
+        await handleDroppedFiles(files);
+    }
+});

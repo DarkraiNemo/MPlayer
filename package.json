@@ -1,8 +1,7 @@
 {
   "name": "mplayer",
-  "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
+  "version": "1.0.1",
+  "description": "Mplayer Built In Electron, provinding the User to listen to songs.",
   "homepage": "https://github.com/DarkraiNemo/MPlayer.git",
   "scripts": {
     "start": "electron .",
@@ -11,24 +10,27 @@
   "build": {
     "appId": "com.mplayer.mplayer",
     "productName": "MPlayer",
-    "icon": "dist/zonia.ico",
+    "icon": "./srcs/MPlayer.svg",
     "linux": {
-      "target": ["AppImage", "deb"],
-      "icon": "dist/zonia.ico",
-      "maintainer": "Darkgrey_ <backupusa190@gmail.com>"
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "maintainer": "Darkgrey_ <backupusa190@gmail.com>",
+      "icon": "./srcs/MPlayer.svg"
     },
     "win": {
-      "target": ["nsis", "portable"],
-      "icon": "dist/zonia.ico"
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "./srcs/MPlayer.svg"
     }
   },
-  "keywords": [],
-  "author": {
-    "name": "Darkgrey_",
-    "email": "backupusa190@gmail.com"
-  },
   "license": "ISC",
+  "author": "Darkgrey_ <backupusa190@gmail.com>",
   "type": "commonjs",
+  "main": "main.js",
   "devDependencies": {
     "electron": "^42.4.1",
     "electron-builder": "^26.15.3"

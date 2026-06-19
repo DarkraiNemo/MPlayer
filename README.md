@@ -37,9 +37,9 @@
 
 ## Demo project:
 
-![First screenshot](https://i.imgur.com/6OmNxzZ.png)
-![Second screenshot](https://i.imgur.com/YdjcMhR.png)
-![Third screenshot](https://i.imgur.com/1jH3TtK.png)
+![First screenshot](https://i.imgur.com/FqeGOYB.png)
+![Second screenshot](https://i.imgur.com/Cu5SnJj.png)
+![Third screenshot](https://i.imgur.com/qnkGYZm.png)
 
 ## Who are the people behind the project?
 

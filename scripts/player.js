@@ -7,6 +7,7 @@ const btnNext = document.getElementById('btn-forward');
 const btnPrev = document.getElementById('btn-rewind');
 const btnStop = document.getElementById('btn-stop');
 const btnLoop = document.getElementById('btn-loop');
+const btnShuffle = document.getElementById('btn-shuffle');
 
 const volumeSlider = document.getElementById('volume-slider');
 const progressSlider = document.getElementById('progress-slider');
@@ -16,9 +17,11 @@ const nowPlayingName = document.getElementById('now-playing-name');
 const coverArt = document.getElementById('cover-art');
 
 let playlist = [];
+let originalPlaylist = [];
 let currentIndex = 0;
 let currentUrl = null;
 let loopEnabled = false;
+let shuffleEnabled = false;
 
 function isAudioFile(file) {
     return file.type.startsWith('audio/') || /\.(mp3|wav|ogg|m4a|flac|mid)$/i.test(file.name);
@@ -38,6 +41,14 @@ function getTrackTitle(fileName) {
 function updateNowPlaying(name) {
     if (!nowPlayingName) return;
     nowPlayingName.textContent = name || '-';
+
+    const container = nowPlayingName.parentElement;
+    nowPlayingName.classList.remove('scrolling');
+
+    requestAnimationFrame(() => {
+        const isOverflowing = nowPlayingName.scrollWidth > container.clientWidth;
+        nowPlayingName.classList.toggle('scrolling', isOverflowing);
+    });
 }
 
 function clearCurrentUrl() {
@@ -71,7 +82,7 @@ async function updateCoverArt(file) {
     if (!coverArt) return;
 
     // fallback
-    coverArt.src = 'https://i.imgur.com/JRry7xN.png';
+    coverArt.src = '../srcs/MPlayer.png';
 
     if (!window.jsmediatags) return;
 
@@ -124,8 +135,7 @@ function renderPlaylist() {
         .join('');
 
     playlistTab.innerHTML = `
-        <article>
-            <p><strong>Playlist carregada:</strong></p>
+        <article class="playlist-article">
             <ol class="playlist-list">${items}</ol>
         </article>
     `;
@@ -228,21 +238,15 @@ async function handleDroppedFiles(itemsOrFiles) {
 
     if (uniqueAudio.length === 0) return;
 
-    const startingIndex = playlist.length;
-    playlist = [...playlist, ...uniqueAudio]; 
-    
-    renderPlaylist();
-    showPlaylistTab();
-    
-    if (startingIndex === 0) {
-        loadTrack(0);
-    }
+    playlist = [...uniqueAudio];
+    originalPlaylist = [...uniqueAudio];
+    currentIndex = 0;
 
-    playlist = uniqueAudio;
     renderPlaylist();
     showPlaylistTab();
     loadTrack(0);
 }
+
 
 document.addEventListener('drop', (e) => {
     e.preventDefault();
@@ -270,7 +274,17 @@ if (dropZone) {
 
 function nextTrack() {
     if (!playlist.length) return;
-    loadTrack((currentIndex + 1) % playlist.length);
+
+    if (shuffleEnabled) {
+        let randomIndex;
+        do {
+            randomIndex = Math.floor(Math.random() * playlist.length);
+        } while (randomIndex === currentIndex && playlist.length > 1);
+
+        loadTrack(randomIndex);
+    } else {
+        loadTrack((currentIndex + 1) % playlist.length);
+    }
 }
 
 function prevTrack() {
@@ -297,6 +311,10 @@ btnLoop?.addEventListener('click', () => {
     loopEnabled = !loopEnabled;
     audioPlayer.loop = loopEnabled;
     btnLoop.classList.toggle('active', loopEnabled);
+});
+btnShuffle?.addEventListener('click', () => {
+    shuffleEnabled = !shuffleEnabled;
+    btnShuffle.classList.toggle('active', shuffleEnabled);
 });
 
 volumeSlider?.addEventListener('input', () => {
@@ -387,12 +405,24 @@ function startVisualizerLoop() {
         visualizerCtx.fillStyle = '#14151f';
         visualizerCtx.fillRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
 
+        const barGradient = visualizerCtx.createLinearGradient(
+            0,
+            visualizerCanvas.height,
+            0,
+            0
+        );
+        barGradient.addColorStop(0, 'rgba(155, 77, 202, 1)');
+        barGradient.addColorStop(0.25, 'rgba(124, 58, 173, 1)');
+        barGradient.addColorStop(0.5, 'rgba(90, 45, 130, 1)');
+        barGradient.addColorStop(0.75, 'rgba(58, 24, 90, 1)');
+        barGradient.addColorStop(1, 'rgba(26, 10, 46, 1)');
+
         const barWidth = visualizerCanvas.width / audioData.length;
 
         for (let i = 0; i < audioData.length; i++) {
             const barHeight = (audioData[i] / 255) * visualizerCanvas.height;
 
-            visualizerCtx.fillStyle = gradient;
+            visualizerCtx.fillStyle = barGradient;
             visualizerCtx.fillRect(
                 i * barWidth,
                 visualizerCanvas.height - barHeight,
@@ -456,15 +486,37 @@ audioPlayer?.addEventListener('play', async () => {
     setupVisualizer();
 });
 
-const gradient = visualizerCtx.createLinearGradient(
-    0,
-    visualizerCanvas.height,
-    0,
-    0
-);
+function shuffleArray(array) {
+    const result = [...array];
+    for (let i = result.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+}
 
-gradient.addColorStop(0, 'rgba(84, 66, 150, 1)');
-gradient.addColorStop(0.2, 'rgba(43, 28, 99, 1)');
-gradient.addColorStop(1, 'rgba(20, 12, 48, 1)');
+function toggleShuffle() {
+    if (!playlist.length) return;
 
-visualizerCtx.fillStyle = gradient;
+    const wasPlaying = !audioPlayer.paused;
+    const currentFile = playlist[currentIndex];
+
+    shuffleEnabled = !shuffleEnabled;
+    btnShuffle?.addEventListener('click', () => {
+        shuffleEnabled = !shuffleEnabled;
+        btnShuffle.classList.toggle('active', shuffleEnabled);
+    });
+
+    if (shuffleEnabled) {
+        originalPlaylist = [...playlist];
+        playlist = shuffleArray(playlist);
+    } else {
+        playlist = [...originalPlaylist];
+    }
+
+    currentIndex = playlist.findIndex(file => file.name === currentFile.name);
+    if (currentIndex === -1) currentIndex = 0;
+
+    renderPlaylist();
+    loadTrack(currentIndex, wasPlaying);
+}
